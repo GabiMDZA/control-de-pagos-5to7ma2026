@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.redtel.controldepagos.IService.IClienteService;
-import com.redtel.controldepagos.entidades.Cliente;
+import com.redtel.controldepagos.entidades.Clie;
 
 @RestController
 @RequestMapping("/api/clientes")
