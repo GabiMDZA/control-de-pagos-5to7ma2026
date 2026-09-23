@@ -1,1 +1,11 @@
-C:\Users\USUARIO\Desktop\controldepagos\controldepagos\src\main\java\com\redtel\controldepagos\ControldepagosApplication.java
+C:\Users\USUARIO\Desktop\control-de-pagos-5to7ma2026\src\main\java\com\redtel\controldepagos\ControldepagosApplication.java
+C:\Users\USUARIO\Desktop\control-de-pagos-5to7ma2026\src\main\java\com\redtel\controldepagos\controller\AdminController.java
+C:\Users\USUARIO\Desktop\control-de-pagos-5to7ma2026\src\main\java\com\redtel\controldepagos\controller\ClienteController.java
+C:\Users\USUARIO\Desktop\control-de-pagos-5to7ma2026\src\main\java\com\redtel\controldepagos\entidades\Admin.java
+C:\Users\USUARIO\Desktop\control-de-pagos-5to7ma2026\src\main\java\com\redtel\controldepagos\entidades\Cliente.java
+C:\Users\USUARIO\Desktop\control-de-pagos-5to7ma2026\src\main\java\com\redtel\controldepagos\iservice\AdminIService.java
+C:\Users\USUARIO\Desktop\control-de-pagos-5to7ma2026\src\main\java\com\redtel\controldepagos\iservice\ClienteIService.java
+C:\Users\USUARIO\Desktop\control-de-pagos-5to7ma2026\src\main\java\com\redtel\controldepagos\repository\AdminRepository.java
+C:\Users\USUARIO\Desktop\control-de-pagos-5to7ma2026\src\main\java\com\redtel\controldepagos\repository\ClienteRepository.java
+C:\Users\USUARIO\Desktop\control-de-pagos-5to7ma2026\src\main\java\com\redtel\controldepagos\service\AdminService.java
+C:\Users\USUARIO\Desktop\control-de-pagos-5to7ma2026\src\main\java\com\redtel\controldepagos\service\ClienteService.java

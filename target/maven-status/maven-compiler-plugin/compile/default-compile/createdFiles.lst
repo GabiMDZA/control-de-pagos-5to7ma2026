@@ -1,0 +1,11 @@
+com\redtel\controldepagos\ControldepagosApplication.class
+com\redtel\controldepagos\entidades\Admin.class
+com\redtel\controldepagos\service\ClienteService.class
+com\redtel\controldepagos\entidades\Cliente.class
+com\redtel\controldepagos\controller\ClienteController.class
+com\redtel\controldepagos\service\AdminIService.class
+com\redtel\controldepagos\service\AdminService.class
+com\redtel\controldepagos\repository\ClienteRepository.class
+com\redtel\controldepagos\service\ClienteIService.class
+com\redtel\controldepagos\repository\AdminRepository.class
+com\redtel\controldepagos\controller\AdminController.class
