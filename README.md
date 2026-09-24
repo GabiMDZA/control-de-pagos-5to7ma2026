@@ -1,6 +1,6 @@
 # Control de Pagos RedTel
 
-Aplicación web para gestionar los clientes y los pagos de una empresa de internet. Permite iniciar sesión como administrador, registrar y editar clientes, consultar su velocidad y monto mensual, marcar pagos y visualizar estadísticas de clientes pagados y con deuda.
+Aplicación web para gestionar los clientes y los pagos de una empresa de internet. Permite iniciar sesión como administrador, registrar y editar clientes, consultar su velocidad y monto mensual, marcar pagos y ver estadísticas de clientes pagados y con deuda.
 
 ## Tecnologías
 
