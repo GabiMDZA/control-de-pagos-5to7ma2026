@@ -274,7 +274,7 @@ async function cargarClientesDeuda() {
             <div class="cliente-item">
                 <div class="cliente-info">
                     <h4>${cliente.nombre} ${cliente.apellido}</h4>
-                    <p>📱 ${cliente.celular} | 💰 $${cliente.montoPaga}</p>
+                    <p>Celular: ${cliente.celular} | Debe: $${cliente.montoPaga}</p>
                 </div>
             </div>
         `).join('');
