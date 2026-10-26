@@ -401,3 +401,119 @@ function mostrarDashboard() {
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('usuario').focus();
 });
+
+//  PLANES DE VELOCIDAD 
+let planes = [];
+
+const planesTbody = document.getElementById('planesTbody');
+const btnNuevoPlan = document.getElementById('btnNuevoPlan');
+const modalPlan = document.getElementById('modalPlan');
+const formPlan = document.getElementById('formPlan');
+const selectVelocidad = document.getElementById('clienteVelocidad');
+
+async function cargarPlanes() {
+    try {
+        const response = await fetch(`${API_URL}/velocidades`);
+        planes = await response.json();
+        renderizarPlanes(planes);
+        llenarSelectVelocidad();
+    } catch (error) {
+        console.error('Error al cargar planes:', error);
+        planesTbody.innerHTML = '<tr><td colspan="4" class="text-center">Error al cargar planes</td></tr>';
+    }
+}
+
+function renderizarPlanes(lista) {
+    if (lista.length === 0) {
+        planesTbody.innerHTML = '<tr><td colspan="4" class="text-center">No hay planes</td></tr>';
+        return;
+    }
+    planesTbody.innerHTML = lista.map(p => `
+        <tr>
+            <td>${p.id}</td>
+            <td>${p.cantidad} Mbps</td>
+            <td>$${p.precio}</td>
+            <td>
+                <div class="action-buttons">
+                    <button class="btn btn-sm btn-secondary" onclick="editarPlan(${p.id})">Editar</button>
+                    <button class="btn btn-sm btn-danger" onclick="eliminarPlan(${p.id})">Eliminar</button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+}
+
+// Llena el dropdown del formulario de cliente.
+// Guarda el precio en data-precio para autocompletar el monto.
+function llenarSelectVelocidad() {
+    const valorActual = selectVelocidad.value;
+    selectVelocidad.innerHTML = '<option value="">Seleccionar plan</option>' +
+        planes.map(p => `<option value="${p.cantidad} Mbps" data-precio="${p.precio}">${p.cantidad} Mbps - $${p.precio}</option>`).join('');
+    selectVelocidad.value = valorActual;
+}
+
+// Al elegir un plan, autocompleta el monto
+selectVelocidad.addEventListener('change', (e) => {
+    const opcion = e.target.selectedOptions[0];
+    if (opcion && opcion.dataset.precio) {
+        document.getElementById('clienteMonto').value = opcion.dataset.precio;
+    }
+});
+
+btnNuevoPlan.addEventListener('click', () => {
+    document.getElementById('planId').value = '';
+    document.getElementById('modalPlanTitle').textContent = 'Nuevo Plan';
+    formPlan.reset();
+    abrirModal(modalPlan);
+});
+
+formPlan.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const id = document.getElementById('planId').value;
+    const plan = {
+        cantidad: parseInt(document.getElementById('planCantidad').value),
+        precio: parseInt(document.getElementById('planPrecio').value)
+    };
+
+    try {
+        const response = await fetch(
+            id ? `${API_URL}/velocidades/${id}` : `${API_URL}/velocidades`,
+            {
+                method: id ? 'PUT' : 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(plan)
+            }
+        );
+
+        if (!response.ok) {
+            alert(await response.text());
+            return;
+        }
+
+        cerrarModal(modalPlan);
+        cargarPlanes();
+    } catch (error) {
+        console.error('Error al guardar plan:', error);
+    }
+});
+
+function editarPlan(id) {
+    const plan = planes.find(p => p.id === id);
+    if (!plan) return;
+    document.getElementById('planId').value = plan.id;
+    document.getElementById('planCantidad').value = plan.cantidad;
+    document.getElementById('planPrecio').value = plan.precio;
+    document.getElementById('modalPlanTitle').textContent = 'Editar Plan';
+    abrirModal(modalPlan);
+}
+
+async function eliminarPlan(id) {
+    if (!confirm('¿Eliminar este plan?')) return;
+    try {
+        await fetch(`${API_URL}/velocidades/${id}`, { method: 'DELETE' });
+        cargarPlanes();
+    } catch (error) {
+        console.error('Error al eliminar plan:', error);
+    }
+}
