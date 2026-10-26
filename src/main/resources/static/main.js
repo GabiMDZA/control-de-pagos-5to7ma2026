@@ -35,20 +35,20 @@ const btnActualizarStats = document.getElementById('btnActualizarStats');
 
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
+
     const usuario = document.getElementById('usuario').value;
     const contraseña = document.getElementById('contraseña').value;
     const loginError = document.getElementById('loginError');
-    
+
     try {
         const response = await fetch(`${API_URL}/admins/validar`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ usuario, contraseña })
         });
-        
+
         const isValid = await response.json();
-        
+
         if (isValid) {
             usuarioLogueado = usuario;
             loginError.textContent = '';
@@ -73,22 +73,24 @@ btnLogout.addEventListener('click', () => {
 
 menuItems.forEach(item => {
     item.addEventListener('click', () => {
-        
+
         menuItems.forEach(m => m.classList.remove('active'));
         sections.forEach(s => s.classList.remove('active'));
-        
-        
+
+
         item.classList.add('active');
         const section = item.getAttribute('data-section');
         document.getElementById(section + 'Section').classList.add('active');
-        
-    
+
+
         if (section === 'clientes') {
             cargarClientes();
         } else if (section === 'estadisticas') {
             cargarEstadisticas();
         } else if (section === 'admins') {
             cargarAdmins();
+        } else if (section === 'planes') {
+            cargarPlanes();
         }
     });
 });
@@ -110,7 +112,7 @@ function renderizarClientes(clientesList) {
         clientesTable.innerHTML = '<tr><td colspan="9" class="text-center">No hay clientes</td></tr>';
         return;
     }
-    
+
     clientesTable.innerHTML = clientesList.map(cliente => `
         <tr>
             <td>${cliente.id}</td>
@@ -150,7 +152,7 @@ btnNuevoCliente.addEventListener('click', () => {
 
 formCliente.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
+
     const id = document.getElementById('clienteId').value;
     const cliente = {
         nombre: document.getElementById('clienteNombre').value,
@@ -161,24 +163,24 @@ formCliente.addEventListener('submit', async (e) => {
         montoPaga: parseInt(document.getElementById('clienteMonto').value),
         pagó: document.getElementById('clientePagó').checked
     };
-    
+
     try {
         if (id) {
-            
+
             await fetch(`${API_URL}/clientes/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(cliente)
             });
         } else {
-            
+
             await fetch(`${API_URL}/clientes`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(cliente)
             });
         }
-        
+
         cerrarModal(modalCliente);
         cargarClientes();
     } catch (error) {
@@ -189,7 +191,7 @@ formCliente.addEventListener('submit', async (e) => {
 async function editarCliente(id) {
     const cliente = clientes.find(c => c.id === id);
     if (!cliente) return;
-    
+
     document.getElementById('clienteId').value = cliente.id;
     document.getElementById('clienteNombre').value = cliente.nombre;
     document.getElementById('clienteApellido').value = cliente.apellido;
@@ -198,14 +200,14 @@ async function editarCliente(id) {
     document.getElementById('clienteVelocidad').value = cliente.velocidad;
     document.getElementById('clienteMonto').value = cliente.montoPaga;
     document.getElementById('clientePagó').checked = cliente.pagó;
-    
+
     document.getElementById('modalClienteTitle').textContent = 'Editar Cliente';
     abrirModal(modalCliente);
 }
 
 async function eliminarCliente(id) {
     if (!confirm('¿Está seguro de que desea eliminar este cliente?')) return;
-    
+
     try {
         await fetch(`${API_URL}/clientes/${id}`, { method: 'DELETE' });
         cargarClientes();
@@ -221,9 +223,9 @@ filtroEstado.addEventListener('change', filtrarClientes);
 function filtrarClientes() {
     const busqueda = buscarCliente.value.toLowerCase();
     const estado = filtroEstado.value;
-    
+
     let filtered = clientes;
-    
+
 
     if (busqueda) {
         filtered = filtered.filter(c =>
@@ -238,7 +240,7 @@ function filtrarClientes() {
     } else if (estado === 'deuda') {
         filtered = filtered.filter(c => !c.pagó);
     }
-    
+
     renderizarClientes(filtered);
 }
 
@@ -246,12 +248,12 @@ async function cargarEstadisticas() {
     try {
         const response = await fetch(`${API_URL}/clientes/estadisticas/pagos`);
         const stats = await response.json();
-        
+
         document.getElementById('totalClientes').textContent = stats.totalClientes;
         document.getElementById('clientesPagados').textContent = stats.clientesPagados;
         document.getElementById('clientesDeuda').textContent = stats.clientesConDeuda;
         document.getElementById('porcentajePago').textContent = stats.porcentajePagado + '%';
-        
+
         cargarClientesDeuda();
     } catch (error) {
         console.error('Error al cargar estadísticas:', error);
@@ -262,14 +264,14 @@ async function cargarClientesDeuda() {
     try {
         const response = await fetch(`${API_URL}/clientes/deuda/todos`);
         const deudores = await response.json();
-        
+
         const lista = document.getElementById('clientesDeudaList');
-        
+
         if (deudores.length === 0) {
             lista.innerHTML = '<p class="text-center">¡Todos los clientes están al día!</p>';
             return;
         }
-        
+
         lista.innerHTML = deudores.map(cliente => `
             <div class="cliente-item">
                 <div class="cliente-info">
@@ -302,7 +304,7 @@ function renderizarAdmins(adminsList) {
         adminsTable.innerHTML = '<tr><td colspan="3" class="text-center">No hay administradores</td></tr>';
         return;
     }
-    
+
     adminsTable.innerHTML = adminsList.map(admin => `
         <tr>
             <td>${admin.id}</td>
@@ -325,13 +327,13 @@ btnNuevoAdmin.addEventListener('click', () => {
 
 formAdmin.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
+
     const id = document.getElementById('adminId').value;
     const admin = {
         usuario: document.getElementById('adminUsuario').value,
         contraseña: document.getElementById('adminContraseña').value
     };
-    
+
     try {
         if (id) {
             await fetch(`${API_URL}/admins/${id}`, {
@@ -346,7 +348,7 @@ formAdmin.addEventListener('submit', async (e) => {
                 body: JSON.stringify(admin)
             });
         }
-        
+
         cerrarModal(modalAdmin);
         cargarAdmins();
     } catch (error) {
@@ -356,7 +358,7 @@ formAdmin.addEventListener('submit', async (e) => {
 
 async function eliminarAdmin(id) {
     if (!confirm('¿Está seguro de que desea eliminar este administrador?')) return;
-    
+
     try {
         await fetch(`${API_URL}/admins/${id}`, { method: 'DELETE' });
         cargarAdmins();
@@ -396,6 +398,7 @@ function mostrarDashboard() {
     dashboardScreen.style.display = 'flex';
     usuarioLogueadoSpan.textContent = usuarioLogueado;
     cargarClientes();
+    cargarPlanes();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
